@@ -1,6 +1,6 @@
 const { string } = require("yargs");
 const yargs = require("yargs");
-const { simpanContact } = require("./contacts");
+const { detailContact, listContacts, simpanContact, deleteContact } = require("./contacts");
 
 
 
@@ -28,18 +28,48 @@ yargs.command({
         simpanContact(nama, email, noHp)
     }
 
+}).demandCommand()
+
+//menampilkan daftar semua nama kontak
+yargs.command({
+    command: 'list',
+    describe: 'Menambahkan semua nama dan no hp',
+    handler() {
+        listContacts()
+    }
+})
+
+// Menampilkan Detail Kontak
+yargs.command({
+    command: 'detail',
+    describe: 'Menampilkan detail sebuah kontak berdasarkan nama',
+    builder: {
+        nama: {
+            describe: 'Nama Lengkap',
+            demandOption: true,
+            type: 'string'
+        },
+    },
+    handler({ nama }) {
+        detailContact(nama)
+    }
+})
+
+
+// Menghapus data berdasarkan nama
+yargs.command({
+    command: 'delete',
+    describe: 'Menghapus data sebuah kontak berdasarkan nama',
+    builder: {
+        nama: {
+            describe: 'Nama Lengkap',
+            demandOption: true,
+            type: 'string'
+        },
+    },
+    handler({ nama }) {
+        deleteContact(nama)
+    }
 })
 
 yargs.parse()
-
-// const { pertanyaan, simpanContact } = require('./contacts');
-
-// const main = async () => {
-//     const nama = await pertanyaan('Masukan nama anda: ')
-//     const email = await pertanyaan('Masukan email anda: ')
-//     const noHp = await pertanyaan('Masukan nohp anda: ')
-
-//     simpanContact(nama, email, noHp)
-// }
-
-// main()

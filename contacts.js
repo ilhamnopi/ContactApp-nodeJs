@@ -1,4 +1,5 @@
 const chalk = require('chalk');
+const { log } = require('console');
 const fs = require('fs');
 const readline = require('readline');
 const validator = require('validator');
@@ -16,10 +17,18 @@ if (!fs.existsSync(dirPath) || !fs.existsSync(dataPath)) {
     fs.writeFileSync(dataPath, '[]', 'utf-8')
 }
 
-const simpanContact = (nama, email, noHp) => {
-    const contact = { nama, email, noHp };
+const loadContect = () => {
     const file = fs.readFileSync(dataPath, 'utf-8')
     const contacts = JSON.parse(file);
+    return contacts
+}
+
+const simpanContact = (nama, email, noHp) => {
+    const contact = { nama, email, noHp };
+    // const file = fs.readFileSync(dataPath, 'utf-8')
+    // const contacts = JSON.parse(file);
+    const contacts = loadContect()
+
 
     // Cek duplikat
     const duplikat = contacts.find((contact) => contact.nama === nama)
@@ -53,4 +62,48 @@ const simpanContact = (nama, email, noHp) => {
 
 }
 
-module.exports = { simpanContact }
+const listContacts = () => {
+    const contacts = loadContect()
+    console.log(chalk.cyanBright.inverse.bold('Daftar Kontak'))
+    contacts.forEach((contact, i) => {
+        console.log(`${i + 1}. ${contact.nama} - ${contact.noHp}`)
+    })
+    rl.close()
+}
+
+const detailContact = (nama) => {
+    const contacts = loadContect();
+    const contact = contacts.find((contact) => contact.nama.toLowerCase() === nama.toLowerCase())
+    if (!contact) {
+        console.log(chalk.red.inverse.bold(`${nama} tidak ditemukan !`));
+        rl.close()
+        return false
+    }
+
+    console.log(chalk.green.inverse("data ditemukan"));
+    console.log(chalk.green(`
+    \n nama: ${contact.nama}
+    \n email: ${contact.email}
+    \n email: ${contact.noHp}
+    `))
+    rl.close()
+
+}
+
+const deleteContact = (nama) => {
+    const contacts = loadContect();
+    const newContacts = contacts.filter(
+        (contact) => contact.nama.toLowerCase() !== nama.toLowerCase());
+
+    if (contacts.length === newContacts.length) {
+        console.log(chalk.red.inverse(`Nama ${nama} tidak ada !`));
+        rl.close()
+        return false
+    }
+
+    fs.writeFileSync(dataPath, JSON.stringify(newContacts, null, 2));
+    console.log(chalk.green.inverse.bold(`data ${nama} berhasil dihapus`));
+    rl.close()
+}
+
+module.exports = { deleteContact, detailContact, listContacts, simpanContact }
