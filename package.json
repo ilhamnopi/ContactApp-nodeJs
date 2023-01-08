@@ -11,9 +11,18 @@
   "license": "ISC",
   "dependencies": {
     "chalk": "^4.1.0",
-    "validator": "^13.5.2"
+    "validator": "^13.5.2",
+    "yargs": "^16.2.0"
   },
   "devDependencies": {
     "nodemon": "^2.0.20"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ilhamnopi/ContactApp-nodeJs.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ilhamnopi/ContactApp-nodeJs/issues"
+  },
+  "homepage": "https://github.com/ilhamnopi/ContactApp-nodeJs#readme"
 }
